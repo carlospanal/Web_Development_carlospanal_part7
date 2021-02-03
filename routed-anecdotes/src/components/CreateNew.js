@@ -1,28 +1,37 @@
-import React, { useState } from 'react'
+/* eslint-disable react/jsx-props-no-spreading */
+import React from 'react'
 import PropTypes from 'prop-types'
 import {
   useHistory,
 } from 'react-router-dom'
+import { useField } from '../hooks'
 
 const CreateNew = (props) => {
   const history = useHistory()
 
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('content')
+  const author = useField('author')
+  const info = useField('info')
+
+  const handleReset = () => {
+    content.onReset()
+    author.onReset()
+    info.onReset()
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.fieldObject.value,
+      author: author.fieldObject.value,
+      info: info.fieldObject.value,
       votes: 0,
     })
     history.push('/')
     props.setNotification(
       {
-        content,
+        content: content.fieldObject.value,
         style: { display: 'block' },
       },
     )
@@ -43,18 +52,21 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name="content" value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...(content.fieldObject)} />
         </div>
         <div>
           author
-          <input name="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...(author.fieldObject)} />
         </div>
         <div>
           url for more info
-          <input name="info" value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...(info.fieldObject)} />
         </div>
         <button type="submit">
           create
+        </button>
+        <button type="button" onClick={handleReset}>
+          reset data
         </button>
       </form>
     </div>

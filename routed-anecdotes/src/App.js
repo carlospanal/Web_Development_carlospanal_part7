@@ -39,6 +39,7 @@ const App = () => {
     const newAnecdote = {
       ...anecdote,
     }
+
     newAnecdote.id = (Math.random() * 10000)
     setAnecdotes(anecdotes.concat(newAnecdote))
   }
